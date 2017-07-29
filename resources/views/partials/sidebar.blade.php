@@ -14,6 +14,12 @@
                     <i class="fa fa-dashboard fa-fw"></i> @lang('app.dashboard')
                 </a>
             </li>
+			  <li class="{{ Request::is('chat') ? 'active open' : ''  }}">
+                <a href="{{ route('chat') }}" class="{{ Request::is('chat') ? 'active' : ''  }}">
+                    <i class="fa fa-comment fa-fw"></i> @lang('app.messages')
+                </a>
+            </li>
+		
             @permission('users.manage')
                 <li class="{{ Request::is('user*') ? 'active open' : ''  }}">
                     <a href="{{ route('user.list') }}" class="{{ Request::is('user*') ? 'active' : ''  }}">

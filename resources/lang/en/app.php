@@ -15,6 +15,7 @@ return [
     'auth_and_registration' => 'Auth & Registration',
     'notifications' => 'Notifications',
     'action' => 'Action',
+	'messages' => 'Messages',
 
     // Activity Log Section
     'activity_log' => 'Activity Log',

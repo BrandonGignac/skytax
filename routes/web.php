@@ -62,6 +62,12 @@ Route::post('auth/twitter/email', 'Auth\SocialAuthController@postTwitterEmail');
 Route::group(['middleware' => 'auth'], function () {
 
     /**
+     * Chat
+     */
+    
+    Route::get('chat', 'ChatController@index');
+
+    /**
      * Dashboard
      */
 
@@ -69,7 +75,18 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'dashboard',
         'uses' => 'DashboardController@index'
     ]);
+	
+	/**
+     * Chat
+	
+     */
+	 
+	 Route::get('chat', [
+        'as' => 'chat',
+        'uses' => 'ChatController@index'
+    ]);
 
+  
     /**
      * User Profile
      */
