@@ -98,4 +98,14 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
     {
         return $this->hasMany(Activity::class, 'user_id');
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function chats()
+    {
+        return $this->hasMany(Chat::class);
+    }
 }

@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Ratchet\WebSocket\WsServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
-use Vanguard\Features\Chat;
+use Vanguard\Features\PrivateChat;
 
 class LaunchChat extends Command
 {
@@ -44,7 +44,7 @@ class LaunchChat extends Command
         $server = IoServer::factory(
             new HttpServer(
                 new WsServer(
-                    new Chat()
+                    new PrivateChat()
                 )
             ),
             8010,

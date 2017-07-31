@@ -64,8 +64,28 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      * Chat
      */
-    
-    Route::get('chat', 'ChatController@index');
+
+    Route::group(['prefix' => 'chat/private'], function () {
+        Route::get('/', [
+            'as' => 'chat.list',
+            'uses' => 'ChatController@index'
+        ]);
+
+        Route::get('create', [
+            'as' => 'chat.create',
+            'uses' => 'ChatController@create'
+        ]);
+
+        Route::get('show/{slug}', [
+            'as' => 'chat.show',
+            'uses' => 'ChatController@show'
+        ]);
+
+        Route::post('create', [
+            'as' => 'chat.store',
+            'uses' => 'ChatController@store'
+        ]);
+    });
 
     /**
      * Dashboard
@@ -75,18 +95,7 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'dashboard',
         'uses' => 'DashboardController@index'
     ]);
-	
-	/**
-     * Chat
-	
-     */
-	 
-	 Route::get('chat', [
-        'as' => 'chat',
-        'uses' => 'ChatController@index'
-    ]);
 
-  
     /**
      * User Profile
      */
