@@ -35,17 +35,21 @@
             <th>Title</th>
             <th>Secret slug</th>
             <th># of messages</th>
+            <th>User</th>
+            <th>Created at</th>
             <th class="text-center">@lang('app.action')</th>
             </thead>
             <tbody>
             @if (count($chats))
                 @foreach ($chats as $chat)
                     <tr>
-                        <td><a href="{{ route('chat.show', $chat->slug) }}">{{ $chat->title }}</a></td>
+                        <td>{{ $chat->title }}</td>
                         <td>{{ $chat->slug }}</td>
                         <td>{{ count($chat->messages) }}</td>
+                        <td>{{ $chat->user->username ?: $chat->user->first_name . ' ' . $chat->user->last_name }}</td>
+                        <td>{{ $chat->created_at->format('Y-m-d') }}</td>
                         <td class="text-center">
-                            <a href="{{ route('chat.show', $chat->slug) }}" class="btn btn-success btn-circle"
+                            <a href="#" class="btn btn-success btn-circle"
                                title="View Chat" data-toggle="tooltip" data-placement="top">
                                 <i class="glyphicon glyphicon-eye-open"></i>
                             </a>
@@ -59,5 +63,6 @@
             @endif
             </tbody>
         </table>
+        {!! $chats->render() !!}
     </div>
 @stop

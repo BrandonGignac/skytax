@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Ratchet\WebSocket\WsServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
-use Vanguard\Features\PrivateChat;
+use Vanguard\Services\Messaging\PrivateChat;
 
 class LaunchChat extends Command
 {

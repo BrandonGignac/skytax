@@ -30,6 +30,10 @@
         li.message.mine span.who {
             font-weight: bold;
         }
+
+        .chat-nav-tabs {
+            border-bottom: none !important;
+        }
     </style>
 
     <div class="row">
@@ -47,10 +51,23 @@
         </div>
     </div>
 
+    @if (count($chats))
+        <ul class="nav nav-tabs chat-nav-tabs">
+            @foreach ($chats as $id => $item)
+                <li class="{{ basename(request()->path()) === $item->slug ? 'active' : '' }}">
+                    <a href="{{ $item->slug }}">
+                        {{ $item->title }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <em>@lang('app.no_records_found')</em>
+    @endif
+
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $chat->title }}</div>
                 <div class="panel-body" id="chat">
                     <div style="display:table; width: 100%; margin-bottom: 10px;"></div>
                     <ul id="chatMessages">
@@ -153,7 +170,7 @@
                 this.conn.onopen = function (event) {
                     me.addSystemMessage("Connection established!");
                     this.conn.send(this.userName + ": Hi! I'm now connected!");
-                    setInterval(function() {
+                    setInterval(function () {
                         this.conn.send('ping');
                     }.bind(this), 15000);
 

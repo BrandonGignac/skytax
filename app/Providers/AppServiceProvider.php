@@ -3,6 +3,7 @@
 namespace Vanguard\Providers;
 
 use Carbon\Carbon;
+use Vanguard\Http\ViewComposers\SidebarComposer;
 use Vanguard\Repositories\Activity\ActivityRepository;
 use Vanguard\Repositories\Activity\EloquentActivity;
 use Vanguard\Repositories\Country\CountryRepository;
@@ -28,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Carbon::setLocale(config('app.locale'));
         config(['app.name' => settings('app_name')]);
+        view()->composer(
+            'partials.sidebar',
+            SidebarComposer::class
+        );
     }
 
     /**

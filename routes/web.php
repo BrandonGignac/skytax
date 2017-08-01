@@ -66,6 +66,13 @@ Route::group(['middleware' => 'auth'], function () {
      */
 
     Route::group(['prefix' => 'chat/private'], function () {
+        Route::get('show/{slug}', [
+            'as' => 'chat.clients.show',
+            'uses' => 'ChatController@show'
+        ]);
+    });
+
+    Route::group(['prefix' => 'chats'], function () {
         Route::get('/', [
             'as' => 'chat.list',
             'uses' => 'ChatController@index'

@@ -14,6 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'Vanguard\Model' => 'Vanguard\Policies\ModelPolicy',
+        'Vanguard\Chat' => 'Vanguard\Policies\ChatPolicy',
     ];
 
     /**
@@ -38,5 +39,7 @@ class AuthServiceProvider extends ServiceProvider
         \Blade::directive('endpermission', function ($expression) {
             return "<?php endif; ?>";
         });
+
+        $this->registerPolicies();
     }
 }

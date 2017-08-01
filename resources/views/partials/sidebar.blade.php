@@ -15,12 +15,21 @@
                     <i class="fa fa-dashboard fa-fw"></i> @lang('app.dashboard')
                 </a>
             </li>
-            
-            <li class="{{ Request::is('chat') ? 'active open' : ''  }}">
-                <a href="{{ route('chat.list') }}" class="{{ Request::is('chat*') ? 'active' : ''  }}">
-                    <i class="fa fa-comment fa-fw"></i> @lang('app.messages')
+
+
+            <li class="{{ Request::is('chat/private*') ? 'active open' : ''  }}">
+                <a href="{{ route('chat.clients.show', ['slug' => $chat->slug]) }}" class="{{ Request::is('chat/private*') ? 'active' : ''  }}">
+                    <i class="fa fa-comment fa-fw"></i> Messages
                 </a>
             </li>
+
+            @permission('chats.manage')
+            <li class="{{ Request::is('chats*') ? 'active open' : ''  }}">
+                <a href="{{ route('chat.list') }}" class="{{ Request::is('chats*') ? 'active' : ''  }}">
+                    <i class="fa fa-comments-o" aria-hidden="true"></i> Chats
+                </a>
+            </li>
+            @endpermission
 
             @permission('users.manage')
             <li class="{{ Request::is('user*') ? 'active open' : ''  }}">

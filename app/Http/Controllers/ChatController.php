@@ -10,14 +10,24 @@ use Vanguard\Http\Requests\Chat\CreateChatRequest;
 
 class ChatController extends Controller
 {
+
     /**
-     * Displays the list of all chats.
+     * ChatController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:chats.manage', ['only' => ['create']]);
+    }
+
+    /**
+     * Displays the list of all chats for an admin.
      *
      * @return mixed
      */
     public function index()
     {
-        $chats = Chat::where('user_id', Auth::user()->id)->get();
+        $chats = Chat::latest()->paginate(7);
 
         return view('chat.index', compact("chats"));
     }
@@ -33,7 +43,7 @@ class ChatController extends Controller
     }
 
     /**
-     * Displays the specified chat.
+     * Displays the specified chat for a client.
      *
      * @param $slug
      *
@@ -41,17 +51,18 @@ class ChatController extends Controller
      */
     public function show($slug)
     {
+        $chat = Chat::where('slug', $slug)->with('messages')->first();
+        $this->authorize('display', $chat);
         $user = Auth::user();
         $userName = $user->username ?: $user->first_name . ' ' . $user->last_name;
         $userEmail = $user->email;
-        $chat = Chat::where('slug', $slug)->with('messages')->first();
         $chats = Chat::where('user_id', $user->id)->with('messages')->get();
         $url = explode(':', str_replace('http://', '', str_replace('https://', '', App::make('url')->to('/'))))[0];
 
         Cookie::queue('chat_id', $chat->id, 2628000);
         Cookie::queue('user_id', $user->id, 2628000);
 
-        return view('chat.show', compact("userName", "userEmail", "chat", "chats", "url"));
+        return view('chat.clients.show', compact("userName", "userEmail", "chat", "chats", "url"));
     }
 
     /**

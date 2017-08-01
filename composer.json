@@ -36,8 +36,7 @@
     "autoload": {
         "classmap": [
             "database",
-            "app/Console/Commands",
-            "app/Features"
+            "app/Console/Commands"
         ],
         "psr-4": {
             "Vanguard\\": "app/"
