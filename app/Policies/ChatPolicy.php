@@ -20,6 +20,12 @@ class ChatPolicy
      */
     public function display(User $user, Chat $chat)
     {
-        return $chat->user_id === $user->id;
+        foreach ($user->chats as $userChat) {
+            if ($userChat->id === $chat->id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

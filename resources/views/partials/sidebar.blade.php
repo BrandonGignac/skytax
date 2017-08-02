@@ -16,12 +16,14 @@
                 </a>
             </li>
 
-
-            <li class="{{ Request::is('chat/private*') ? 'active open' : ''  }}">
-                <a href="{{ route('chat.clients.show', ['slug' => $chat->slug]) }}" class="{{ Request::is('chat/private*') ? 'active' : ''  }}">
-                    <i class="fa fa-comment fa-fw"></i> Messages
-                </a>
-            </li>
+            @if($chat)
+                <li class="{{ Request::is('chat/private*') ? 'active open' : ''  }}">
+                    <a href="{{ route('chat.clients.show', ['slug' => $chat->slug]) }}"
+                       class="{{ Request::is('chat/private*') ? 'active' : ''  }}">
+                        <i class="fa fa-comment fa-fw"></i> Messages
+                    </a>
+                </li>
+            @endif
 
             @permission('chats.manage')
             <li class="{{ Request::is('chats*') ? 'active open' : ''  }}">
@@ -30,6 +32,14 @@
                 </a>
             </li>
             @endpermission
+			
+			{{--@permission('taxinfo.manage')
+            <li class="{{ Request::is('taxinfo*') ? 'active open' : ''  }}">
+                <a href="{{ route('familymanage.index') }}" class="{{ Request::is('taxinfo*') ? 'active' : ''  }}">
+                    <i class="fa fa-list-alt fa-fw"></i> Family Tax Info
+                </a>
+            </li>
+            @endpermission--}}
 
             @permission('users.manage')
             <li class="{{ Request::is('user*') ? 'active open' : ''  }}">

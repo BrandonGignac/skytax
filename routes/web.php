@@ -92,6 +92,16 @@ Route::group(['middleware' => 'auth'], function () {
             'as' => 'chat.store',
             'uses' => 'ChatController@store'
         ]);
+
+        Route::get('{chat}/edit', [
+            'as' => 'chat.edit',
+            'uses' => 'ChatController@edit'
+        ]);
+
+        Route::put('{chat}/update', [
+            'as' => 'chat.update',
+            'uses' => 'ChatController@update'
+        ]);
     });
 
     /**

@@ -3,7 +3,7 @@
 namespace Vanguard;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Chat extends Model
@@ -13,7 +13,7 @@ class Chat extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'title', 'slug'];
+    protected $fillable = ['title', 'slug'];
 
     /**
      * Sets up the one-to-many association with the Message model.
@@ -26,12 +26,12 @@ class Chat extends Model
     }
 
     /**
-     * Sets up the one-to-many association with the User model.
+     * Sets up the many-to-many association with the User model.
      *
-     * @return BelongsTo
+     *  @return BelongsToMany
      */
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class);
     }
 }

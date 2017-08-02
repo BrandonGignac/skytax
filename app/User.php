@@ -2,6 +2,8 @@
 
 namespace Vanguard;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Vanguard\Presenters\UserPresenter;
 use Vanguard\Services\Auth\TwoFactor\Authenticatable as TwoFactorAuthenticatable;
@@ -99,13 +101,23 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract
         return $this->hasMany(Activity::class, 'user_id');
     }
 
+    /**
+     * Sets up the one-to-many association with the Message model.
+     *
+     * @return HasMany
+     */
     public function messages()
     {
         return $this->hasMany(Message::class);
     }
 
+    /**
+     * Sets up the many-to-many association with the Chat model.
+     *
+     *  @return BelongsToMany
+     */
     public function chats()
     {
-        return $this->hasMany(Chat::class);
+        return $this->belongsToMany(Chat::class);
     }
 }

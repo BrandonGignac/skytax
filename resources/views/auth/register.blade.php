@@ -22,6 +22,10 @@
                 <i class="fa fa-at"></i>
                 <input type="email" name="email" id="email" class="form-control" placeholder="@lang('app.email')" value="{{ old('email') }}">
             </div>
+			<div class="form-group input-icon">
+                 <i class="fa fa-user"></i>
+                 <input type="text" name="nick" id="nick" class="form-control" placeholder="Nick Name"  value="{{ old('nick') }}">
+            </div>
             <div class="form-group input-icon">
                 <i class="fa fa-user"></i>
                 <input type="text" name="username" id="username" class="form-control" placeholder="@lang('app.username')"  value="{{ old('username') }}">

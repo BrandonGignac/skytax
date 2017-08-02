@@ -5,8 +5,10 @@ namespace Vanguard\Http\Controllers;
 use App;
 use Auth;
 use Cookie;
+use Input;
 use Vanguard\Chat;
-use Vanguard\Http\Requests\Chat\CreateChatRequest;
+use Vanguard\Http\Requests\Chat\ChatRequest;
+use Vanguard\Repositories\User\UserRepository;
 
 class ChatController extends Controller
 {
@@ -17,17 +19,18 @@ class ChatController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:chats.manage', ['only' => ['create']]);
+        $this->middleware('permission:chats.manage', ['except' => ['show']]);
     }
 
     /**
-     * Displays the list of all chats for an admin.
+     * Displays the list of all chats.
      *
      * @return mixed
      */
     public function index()
     {
-        $chats = Chat::latest()->paginate(7);
+        $perPage = 6;
+        $chats = Chat::with('users')->latest()->paginate($perPage);
 
         return view('chat.index', compact("chats"));
     }
@@ -35,11 +38,16 @@ class ChatController extends Controller
     /**
      * Displays the form for creating a new chat.
      *
+     * @param UserRepository $users
+     *
      * @return mixed
      */
-    public function create()
+    public function create(UserRepository $users)
     {
-        return view('chat.add');
+        $perPage = 30;
+        $users = $users->paginate($perPage, Input::get('search'));
+
+        return view('chat.add', compact('users'));
     }
 
     /**
@@ -56,7 +64,7 @@ class ChatController extends Controller
         $user = Auth::user();
         $userName = $user->username ?: $user->first_name . ' ' . $user->last_name;
         $userEmail = $user->email;
-        $chats = Chat::where('user_id', $user->id)->with('messages')->get();
+        $chats = $user->chats()->with('messages')->get();
         $url = explode(':', str_replace('http://', '', str_replace('https://', '', App::make('url')->to('/'))))[0];
 
         Cookie::queue('chat_id', $chat->id, 2628000);
@@ -68,20 +76,57 @@ class ChatController extends Controller
     /**
      * Stores a newly created chat.
      *
-     * @param CreateChatRequest $request
+     * @param ChatRequest $request
      *
      * @return mixed
      */
-    public function store(CreateChatRequest $request)
+    public function store(ChatRequest $request)
     {
-        Chat::create([
+        $chat = Chat::create([
             'title' => $request->get('title'),
             'slug' => $this->generateRandomString(),
-            'user_id' => Auth::user()->id,
         ]);
+
+        $chat->users()->sync(request('users'));
 
         return redirect()->route('chat.list')
             ->withSuccess('New chat has been created.');
+    }
+
+    /**
+     * Displays the form for editing specific chat.
+     *
+     * @param Chat $chat
+     * @param UserRepository $users
+     *
+     * @return mixed
+     */
+    public function edit(Chat $chat, UserRepository $users)
+    {
+        $perPage = 30;
+        $users = $users->paginate($perPage, Input::get('search'));
+
+        return view('chat.edit', compact('chat', 'users'));
+    }
+
+    /**
+     * Update specified chat.
+     *
+     * @param Chat $chat
+     * @param ChatRequest $request
+     *
+     * @return mixed
+     */
+    public function update(Chat $chat, ChatRequest $request)
+    {
+        $chat->update([
+            'title' => $request->get('title')
+        ]);
+
+        $chat->users()->sync(request('users'));
+
+        return redirect()->route('chat.list')
+            ->withSuccess('The chat has been updated.');
     }
 
     /**

@@ -33,9 +33,9 @@
         <table class="table">
             <thead>
             <th>Title</th>
-            <th>Secret slug</th>
+            <th>Slug</th>
             <th># of messages</th>
-            <th>User</th>
+            <th>Participants</th>
             <th>Created at</th>
             <th class="text-center">@lang('app.action')</th>
             </thead>
@@ -46,12 +46,23 @@
                         <td>{{ $chat->title }}</td>
                         <td>{{ $chat->slug }}</td>
                         <td>{{ count($chat->messages) }}</td>
-                        <td>{{ $chat->user->username ?: $chat->user->first_name . ' ' . $chat->user->last_name }}</td>
+                        <td>
+                            @forelse ($chat->users as $user)
+                                <span class="label label-default">
+                                    {{ $user->username ?: $user->first_name . ' ' . $user->last_name }}
+                                </span>
+                                &nbsp
+                            @empty
+                                <span class="label label-danger">
+                                    There are no participants yet
+                                </span>
+                            @endforelse
+                        </td>
                         <td>{{ $chat->created_at->format('Y-m-d') }}</td>
                         <td class="text-center">
-                            <a href="#" class="btn btn-success btn-circle"
-                               title="View Chat" data-toggle="tooltip" data-placement="top">
-                                <i class="glyphicon glyphicon-eye-open"></i>
+                            <a href="{{ route('chat.edit', $chat->id) }}" class="btn btn-primary btn-circle edit"
+                               title="Edit Chat" data-toggle="tooltip" data-placement="top">
+                                <i class="glyphicon glyphicon-edit"></i>
                             </a>
                         </td>
                     </tr>

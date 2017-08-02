@@ -4,7 +4,7 @@ namespace Vanguard\Http\Requests\Chat;
 
 use Vanguard\Http\Requests\Request;
 
-class CreateChatRequest extends Request
+class ChatRequest extends Request
 {
     /**
      * Get the validation rules that apply to the request.

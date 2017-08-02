@@ -4,7 +4,6 @@ namespace Vanguard\Http\ViewComposers;
 
 use Auth;
 use Illuminate\View\View;
-use Vanguard\Chat;
 
 class SidebarComposer
 {
@@ -15,7 +14,7 @@ class SidebarComposer
      */
     public function compose(View $view)
     {
-        $chat = Chat::where('user_id',  Auth::user()->id)->first();
+        $chat = Auth::user()->chats()->first();
         $view->with(compact('chat'));
     }
 }
