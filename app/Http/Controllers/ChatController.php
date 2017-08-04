@@ -62,15 +62,13 @@ class ChatController extends Controller
         $chat = Chat::where('slug', $slug)->with('messages')->first();
         $this->authorize('display', $chat);
         $user = Auth::user();
-        $userName = $user->username ?: $user->first_name . ' ' . $user->last_name;
-        $userEmail = $user->email;
         $chats = $user->chats()->with('messages')->get();
         $url = explode(':', str_replace('http://', '', str_replace('https://', '', App::make('url')->to('/'))))[0];
 
         Cookie::queue('chat_id', $chat->id, 2628000);
         Cookie::queue('user_id', $user->id, 2628000);
 
-        return view('chat.clients.show', compact("userName", "userEmail", "chat", "chats", "url"));
+        return view('chat.clients.show', compact("user", "chat", "chats", "url"));
     }
 
     /**

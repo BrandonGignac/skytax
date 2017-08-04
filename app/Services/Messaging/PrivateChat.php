@@ -43,16 +43,7 @@ class PrivateChat implements MessageComponentInterface
         $chatId = $from->WebSocket->request->getCookie('chat_id');
         $userId = $from->WebSocket->request->getCookie('user_id');
 
-        $body = explode(':', $msg, 2);
-        $body = $body[1];
-
-        if ($body !== " Hi! I'm now connected!") {
-            Message::create([
-                'chat_id' => $chatId,
-                'user_id' => $userId,
-                'body' => $body
-            ]);
-        }
+        $this->storeMessage($msg, $chatId, $userId);
 
         foreach ($this->clients[$chatId] as $client) {
             if ($from !== $client) {
@@ -89,6 +80,22 @@ class PrivateChat implements MessageComponentInterface
         echo "Trace: {$e->getTraceAsString()}\n";
 
         $conn->close();
+    }
+
+    /**
+     * Stores a message in database.
+     *
+     * @param $msg
+     * @param $chatId
+     * @param $userId
+     */
+    private function storeMessage($msg, $chatId, $userId)
+    {
+        Message::create([
+            'chat_id' => $chatId,
+            'user_id' => $userId,
+            'body' => json_decode($msg)->body
+        ]);
     }
 }
 
