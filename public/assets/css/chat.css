@@ -171,4 +171,11 @@
 .list-group-item {
     border-left: none;
     border-right: none;
+    word-wrap: break-word;
+}
+
+.typing-msg {
+    display: block;
+    margin-top: 5px;
+    height: 15px;
 }

@@ -43,7 +43,9 @@ class PrivateChat implements MessageComponentInterface
         $chatId = $from->WebSocket->request->getCookie('chat_id');
         $userId = $from->WebSocket->request->getCookie('user_id');
 
-        $this->storeMessage($msg, $chatId, $userId);
+        if (json_decode($msg)->status === 'sent') {
+            $this->storeMessage($msg, $chatId, $userId);
+        }
 
         foreach ($this->clients[$chatId] as $client) {
             if ($from !== $client) {
