@@ -64,7 +64,7 @@
                                 </div>
                                 <img class="chat-img img-circle avatar"
                                      src="{{ $message->user->present()->avatar }}" alt="User image">
-                                <div class="chat-text" style="word-wrap:break-word;">
+                                <div v-pre class="chat-text" style="word-wrap:break-word;">
                                     {!! nl2br(e($message->body)) !!}
                                 </div>
                             </div>
@@ -83,7 +83,7 @@
                                 </div>
                                 <img class="chat-img img-circle avatar"
                                      src="{{ $message->user->present()->avatar }}" alt="User image">
-                                <div class="chat-text" style="word-wrap:break-word;">
+                                <div v-pre class="chat-text" style="word-wrap:break-word;">
                                     {!! nl2br(e($message->body)) !!}
                                 </div>
                             </div>
@@ -144,6 +144,9 @@
         const TYPING_TIME = 2000;
         const PING_TIME = 15000;
         const PORT = ':8020';
+        const MSG_PING_NAME = 'ping';
+        const MSG_STATUS_IS_TYPING = 'is typing...';
+        const MSG_STATUS_SENT = 'sent';
 
         var vue = new Vue({
             el: '#chat',
@@ -173,7 +176,7 @@
                 this.conn.onopen = function (event) {
                     this.scrollMessagesDown();
                     setInterval(function () {
-                        this.conn.send('ping');
+                        this.conn.send(MSG_PING_NAME);
                     }.bind(this), PING_TIME);
                 }.bind(this);
                 this.conn.onmessage = function (event) {
@@ -184,7 +187,7 @@
                 newMessage: function () {
                     var typingMsgToSend = {
                         'user': this.userName,
-                        'status': 'is typing...'
+                        'status': MSG_STATUS_IS_TYPING
                     };
                     this.conn.send(JSON.stringify(typingMsgToSend));
                     this.stopTyping();
@@ -202,7 +205,7 @@
                 },
                 addServerMessage: function (message) {
                     message = JSON.parse(message);
-                    if (message.status === 'sent') {
+                    if (message.status === MSG_STATUS_SENT) {
                         this.addMessage({
                             "created_at": message.created_at,
                             "avatar": message.avatar,
@@ -214,7 +217,7 @@
                         setInterval(function () {
                             this.showTyping = true;
                         }.bind(this), 2 * TYPING_TIME);
-                    } else if (message.status === 'is typing...') {
+                    } else if (message.status === MSG_STATUS_IS_TYPING) {
                         this.typingMsg = {
                             'user': message.user,
                             'status': message.status
@@ -249,7 +252,7 @@
                         'body': this.newMessage,
                         'avatar': this.userAvatar,
                         'created_at': moment().utc().format('DD-MM-YY H:mm'),
-                        'status': 'sent'
+                        'status': MSG_STATUS_SENT
                     };
                     this.conn.send(JSON.stringify(msgToSend));
                     this.addMeAmessage(this.newMessage, this.userAvatar);
