@@ -27,27 +27,20 @@
             <div class="panel panel-default">
                 <div class="panel-body chat-primary" id="chat">
                     <div class="sidebar-submenu">
-                        <div @click="showMenu = !showMenu" class="mini-submenu" style="display: block
-                        ;">
+                        <div @click="showMenu = !showMenu" class="mini-submenu" style="display: block;">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </div>
-                    @if (count($chats))
-                        <div class="list-group" v-if="showMenu">
-                                <span class="list-group-item">
-                                     <b>My Conversations</b>
-                                </span>
-                            @foreach ($chats as $item)
-                                <a class="list-group-item {{ basename(request()->path()) === $item->slug ? 'active' : '' }}"
-                                   href="{{ $item->slug }}">{{ $item->title }}</a>
-                            @endforeach
-                        </div>
-                    @else
-                        <em>@lang('app.no_records_found')</em>
-                    @endif
                 </div>
-                <div id="chatMessages" ref="chatMessages">
+                <div class="list-group" v-if="showMenu">
+                    <span class="list-group-item"><b>My Conversations</b></span>
+                    @foreach ($chats as $item)
+                        <a class="list-group-item {{ basename(request()->path()) === $item->slug ? 'active' : '' }}"
+                           href="{{ $item->slug }}">{{ $item->title }}</a>
+                    @endforeach
+                </div>
+                <div v-else id="chatMessages" ref="chatMessages">
                     @foreach ($chat->messages as $message)
                         @if ($message->user->email === $user->email)
                             <div class="chat-msg right">
@@ -60,7 +53,9 @@
                                                 </span>
                                             </span>
                                         </span>
-                                    <span class="chat-timestamp pull-left">{{ Carbon\Carbon::parse($message->created_at)->format('d-m-y H:i') }}</span>
+                                    <span class="chat-timestamp pull-left">
+                                        {{ Carbon\Carbon::parse($message->created_at)->subHours(5)->format('d-m-y H:i') }}
+                                    </span>
                                 </div>
                                 <img class="chat-img img-circle avatar"
                                      src="{{ $message->user->present()->avatar }}" alt="User image">
@@ -79,7 +74,9 @@
                                                 </span>
                                             </span>
                                         </span>
-                                    <span class="chat-timestamp pull-right">{{ Carbon\Carbon::parse($message->created_at)->format('d-m-y H:i') }}</span>
+                                    <span class="chat-timestamp pull-right">
+                                        {{ Carbon\Carbon::parse($message->created_at)->subHours(5)->format('d-m-y H:i') }}
+                                    </span>
                                 </div>
                                 <img class="chat-img img-circle avatar"
                                      src="{{ $message->user->present()->avatar }}" alt="User image">
@@ -196,7 +193,7 @@
             methods: {
                 addSystemMessage: function (message) {
                     this.addMessage({
-                        "created_at": moment().utc().format('DD-MM-YY H:mm'),
+                        "created_at": moment().subtract(5, 'hours').utc().format('DD-MM-YY H:mm'),
                         "avatar": "/assets/img/vanguard-logo-no-text.png",
                         "msg": message,
                         "class": "system",
@@ -227,7 +224,7 @@
                 },
                 addMeAmessage: function (message, avatar) {
                     this.addMessage({
-                        "created_at": moment().utc().format('DD-MM-YY H:mm'),
+                        "created_at": moment().subtract(5, 'hours').utc().format('DD-MM-YY H:mm'),
                         "avatar": avatar,
                         "msg": message,
                         "class": "mine",
@@ -251,7 +248,7 @@
                         'name': this.userName,
                         'body': this.newMessage,
                         'avatar': this.userAvatar,
-                        'created_at': moment().utc().format('DD-MM-YY H:mm'),
+                        'created_at': moment().subtract(5, 'hours').utc().format('DD-MM-YY H:mm'),
                         'status': MSG_STATUS_SENT
                     };
                     this.conn.send(JSON.stringify(msgToSend));
@@ -259,10 +256,10 @@
                     this.newMessage = "";
                 },
                 stopTyping: _.debounce(
-                    function () {
-                        this.typingMsg = {};
-                    },
-                    TYPING_TIME
+                        function () {
+                            this.typingMsg = {};
+                        },
+                        TYPING_TIME
                 )
             }
         });
